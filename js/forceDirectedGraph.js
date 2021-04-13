@@ -136,7 +136,6 @@ class ForceDirectedGraph extends View {
                 <h1>Participant ${decode('id')(d)}</h1>
                 <p>Gender: ${decode('gender')(d)}<p>
                 <p>Age: ${d.age}<p>
-                <p>Wave: ${decode('wave')(d)}<p>
                 <p>Field: ${decode('field_cd')(d)}<p>
                 <p>Career: ${decode('career_c')(d)}<p>
                 <p>Race: ${decode('race')(d)}<p>
@@ -164,6 +163,7 @@ class ForceDirectedGraph extends View {
           .style('top', `${e.pageY}px`)
           .html(`
                 <h1>Participants ${decode('id')(l.source)} and ${decode('id')(l.target)}</h1>
+                <p>Wave ${decode('wave')(l)} <p>
                 <p>Average like: ${l.like}/10<p>
                 `);
       })
