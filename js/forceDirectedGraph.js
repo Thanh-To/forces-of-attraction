@@ -1,8 +1,8 @@
 // FORCING PARAMETERS
 // TODO: these should probably be proportioned to the vis dimensions
 const NODE_REPEL_STRENGTH = 50;
-const NODE_LIKE_DISTANCE_FACTOR = 50;
-const NODE_MATCH_DISTANCE_FACTOR = 10;
+const NODE_LIKE_DISTANCE_FACTOR = 2;
+const NODE_MATCH_DISTANCE_FACTOR = 50;
 
 // Default attraction attribute key
 const DEFAULT_DISTANCE = 'like';
@@ -66,7 +66,7 @@ class ForceDirectedGraph extends View {
   nodeDistance() {
     switch (this.distance) {
       case 'like':
-        return (l) => (10 - l.like) * NODE_LIKE_DISTANCE_FACTOR;
+        return (l) => ((10 - l.like) ** 3) * NODE_LIKE_DISTANCE_FACTOR;
       case 'match':
       default:
         return NODE_MATCH_DISTANCE_FACTOR;
@@ -154,9 +154,9 @@ class ForceDirectedGraph extends View {
       .data(matchLinks, (d) => [d.source, d.target])
       .join('line')
       .attr('class', 'graphLink')
-      .attr('opacity', 0.4)
+      .attr('opacity', 0.3)
       .attr('stroke', 'gray')
-      .attr('stroke-width', 0.7)
+      .attr('stroke-width', 0.5)
       .on('mouseover', (e, l) => {
         d3.select('#tooltip')
           .style('display', 'block')

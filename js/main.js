@@ -252,8 +252,12 @@ const mapDetails = (d) => {
 const getGraphData = (data) => {
   const nodes = {};
   const links = {};
-
+  const waves = [];
+  const linkKey = (i, j) => `${i}:${j}`;
   data.forEach((d) => {
+    if (!(waves.includes(d.wave))) {
+      waves.push(d.wave);
+    }
     const iid = `${d.iid}`;
     const pid = `${d.pid}`;
     if (!nodes[iid]) {
@@ -290,12 +294,13 @@ const getGraphData = (data) => {
     if (!nodes[pid].waves.includes(d.wave)) {
       nodes[pid].waves.push(d.wave);
     }
-    const k1 = `duplicate entry: (${iid})->(${pid})`;
-    const k2 = `duplicate entry: (${pid})->(${iid})`;
+    const k1 = linkKey(iid, pid);
+    const k2 = linkKey(pid, iid);
     if (!links[k1] && !links[k2]) {
       links[k1] = {
         source: iid,
         target: pid,
+        paired: true,
         like: d.like,
         match: d.match,
         wave: d.wave,
@@ -306,9 +311,25 @@ const getGraphData = (data) => {
       throw new Error(`duplicate entry: (${iid})->(${pid})`);
     }
   });
+  const allLinks = Object.keys(links).map((k) => links[k]);
+  const nodeKeys = Object.keys(nodes);
+  //   nodeKeys.forEach((i) => {
+  //     nodeKeys.forEach((j) => {
+  //       if (i !== j && !links[linkKey(i, j)] && !links[linkKey(j, i)]) {
+  //         waves.forEach((w) => {
+  //           allLinks.push({
+  //             source: i,
+  //             target: j,
+  //             paired: false,
+  //             wave: w,
+  //           });
+  //         });
+  //       }
+  //     });
+  //   });
   const graphData = {
-    nodes: Object.keys(nodes).map((k) => nodes[k]),
-    links: Object.keys(links).map((k) => links[k]),
+    nodes: nodeKeys.map((k) => nodes[k]),
+    links: allLinks,
   };
   return graphData;
 };
