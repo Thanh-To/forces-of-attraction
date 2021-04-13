@@ -153,9 +153,23 @@ class ForceDirectedGraph extends View {
     const links = vis.chart.selectAll('line')
       .data(matchLinks, (d) => [d.source, d.target])
       .join('line')
-      .attr('opacity', 0.7)
-      .attr('stroke', 'black')
-      .attr('stroke-width', 0.1);
+      .attr('class', 'graphLink')
+      .attr('opacity', 0.4)
+      .attr('stroke', 'gray')
+      .attr('stroke-width', 0.7)
+      .on('mouseover', (e, l) => {
+        d3.select('#tooltip')
+          .style('display', 'block')
+          .style('left', `${e.pageX}px`)
+          .style('top', `${e.pageY}px`)
+          .html(`
+                <h1>Participants ${decode('id')(l.source)} and ${decode('id')(l.target)}</h1>
+                <p>Average like: ${l.like}/10<p>
+                `);
+      })
+      .on('mouseout', (_, __) => {
+        d3.select('#tooltip').style('display', 'none');
+      });
 
     vis.graph.on('tick', () => {
       nodes

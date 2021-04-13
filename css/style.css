@@ -107,3 +107,8 @@ h1 {
 h2 {
     text-align: center;
 }
+
+.graphLink:hover {
+    stroke-width: 4;
+    opacity: 0.8
+}
