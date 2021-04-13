@@ -252,12 +252,8 @@ const mapDetails = (d) => {
 const getGraphData = (data) => {
   const nodes = {};
   const links = {};
-  const waves = [];
   const linkKey = (i, j) => `${i}:${j}`;
   data.forEach((d) => {
-    if (!(waves.includes(d.wave))) {
-      waves.push(d.wave);
-    }
     const iid = `${d.iid}`;
     const pid = `${d.pid}`;
     if (!nodes[iid]) {
@@ -313,20 +309,6 @@ const getGraphData = (data) => {
   });
   const allLinks = Object.keys(links).map((k) => links[k]);
   const nodeKeys = Object.keys(nodes);
-  //   nodeKeys.forEach((i) => {
-  //     nodeKeys.forEach((j) => {
-  //       if (i !== j && !links[linkKey(i, j)] && !links[linkKey(j, i)]) {
-  //         waves.forEach((w) => {
-  //           allLinks.push({
-  //             source: i,
-  //             target: j,
-  //             paired: false,
-  //             wave: w,
-  //           });
-  //         });
-  //       }
-  //     });
-  //   });
   const graphData = {
     nodes: nodeKeys.map((k) => nodes[k]),
     links: allLinks,
