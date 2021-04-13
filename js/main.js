@@ -251,8 +251,7 @@ const mapDetails = (d) => {
 */
 const getGraphData = (data) => {
   const nodes = {};
-  // const partnerNodes = {};
-  const links = [];
+  const links = {};
 
   data.forEach((d) => {
     const iid = `${d.iid}`;
@@ -291,17 +290,25 @@ const getGraphData = (data) => {
     if (!nodes[pid].waves.includes(d.wave)) {
       nodes[pid].waves.push(d.wave);
     }
-    links.push({
-      source: iid,
-      target: pid,
-      like: d.like,
-      match: d.match,
-      wave: d.wave,
-    });
+    const k1 = `duplicate entry: (${iid})->(${pid})`;
+    const k2 = `duplicate entry: (${pid})->(${iid})`;
+    if (!links[k1] && !links[k2]) {
+      links[k1] = {
+        source: iid,
+        target: pid,
+        like: d.like,
+        match: d.match,
+        wave: d.wave,
+      };
+    } else if (links[k2]) {
+      links[k2].like = (links[k2].like + d.like) / 2; // average like attribute
+    } else if (links[iid]) {
+      throw new Error(`duplicate entry: (${iid})->(${pid})`);
+    }
   });
   const graphData = {
     nodes: Object.keys(nodes).map((k) => nodes[k]),
-    links,
+    links: Object.keys(links).map((k) => links[k]),
   };
   return graphData;
 };
